@@ -1,0 +1,42 @@
+enum Load {
+  INTERACTION @label(text: "After first interaction")
+  DELAY @label(text: "After a delay")
+  IMMEDIATE @label(text: "Immediately")
+}
+
+"Sends the events switched on below to the GA4 property configured under Sales > Google API. Renders nothing; place it once in Backstage, which every page carries, the checkout included."
+type GoogleTag @component(
+  code: "lynx_google_tag"
+  template: "OOCS_LynxGoogleTag::Components/GoogleTag"
+  provider: "OOCS\\LynxGoogleTag\\Provider\\GoogleTag"
+  label: "Google Analytics 4"
+  group: "utility"
+  icon: "ph-chart-bar"
+  zones: ["backstage"]
+) {
+  "When the Google script is fetched. Events fired before that are queued and sent once it loads. \"After first interaction\" keeps it out of PageSpeed lab runs, at the cost of visitors who leave without interacting."
+  load: Load! @setting(label: "Load gtag.js") @optional
+  "One cookie name per line. gtag.js is only loaded while every one of them exists with a value — e.g. cookie_consent from the Cookie Consent node, or a consent tool's cookie. Empty: no condition."
+  consent_cookies: Textarea! @setting(label: "Require cookies") @optional
+  "For \"After a delay\": seconds after page load. For \"After first interaction\": fallback so a visitor who never interacts is still counted after this long (0 = no fallback)."
+  delay: Int! @setting(label: "Delay (seconds)", min: 0, max: 120, step: 1, dependsOn: {load: ["delay", "interaction"]}) @optional
+  "GA4 event page_view: every page load and every page change."
+  event_page_view: Boolean! @setting(label: "Send page_view", default: true)
+  "GA4 event purchase: order placed, once per order on the success page."
+  event_purchase: Boolean! @setting(label: "Send purchase", default: true)
+  "GA4 event view_item_list: product list shown (category, search results)."
+  event_view_item_list: Boolean! @setting(label: "Send view_item_list", default: true)
+  "GA4 event view_item: product page viewed."
+  event_view_item: Boolean! @setting(label: "Send view_item", default: true)
+  "GA4 event add_to_cart: product added to the cart, from the product page or a listing."
+  event_add_to_cart: Boolean! @setting(label: "Send add_to_cart", default: true)
+  "GA4 event view_cart: cart page viewed."
+  event_view_cart: Boolean! @setting(label: "Send view_cart", default: true)
+  "GA4 event begin_checkout: checkout opened."
+  event_begin_checkout: Boolean! @setting(label: "Send begin_checkout", default: true)
+  "GA4 event add_shipping_info: shipping method submitted in the checkout."
+  event_add_shipping_info: Boolean! @setting(label: "Send add_shipping_info", default: true)
+  "GA4 event add_payment_info: payment method submitted when placing the order."
+  event_add_payment_info: Boolean! @setting(label: "Send add_payment_info", default: true)
+  ga4_id: String! @optional
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © OOCS Commerce (https://www.oocscommerce.com). All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="OOCS_LynxGoogleTag">
+        <sequence>
+            <!-- The component pool this module's node registers into. -->
+            <module name="OOCS_LynxComponent"/>
+            <!-- GA4 measurement id and enable flag: Sales > Google API > Google GTag. -->
+            <module name="Magento_GoogleGtag"/>
+        </sequence>
+    </module>
+</config>
